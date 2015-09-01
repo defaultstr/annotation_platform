@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %} 用户信息  {% endblock %}
+
+{% block content %}
+    <div class="row text-center">
+        <h3>
+            用户信息
+        </h3>
+    </div>
+    <div class="row">
+    <div class="col-xs-offset-3 col-xs-6 user_info">
+        <div class="user_info_row row">
+            <div class="info_label col-xs-offset-0 col-xs-6">
+                用户名:
+            </div>
+            <div class="info_value col-xs-offest-6 col-xs-6">
+                {{ cur_user.username }}
+            </div>
+        </div>
+        <div class="user_info_row row">
+            <div class="info_label col-xs-offset-0 col-xs-6">
+                邮箱:
+            </div>
+            <div class="info_value col-xs-offest-6 col-xs-6">
+                {{ cur_user.email }}
+            </div>
+        </div>
+        <div class="user_info_row row">
+            <div class="info_label col-xs-offset-0 col-xs-6">
+                性别:
+            </div>
+            <div class="info_value col-xs-offest-6 col-xs-6">
+                {{ cur_user.sex }}
+            </div>
+        </div>
+        <div class="user_info_row row">
+            <div class="info_label col-xs-offset-0 col-xs-6">
+                班级:
+            </div>
+            <div class="info_value col-xs-offest-6 col-xs-6">
+                {{ cur_user.class_no }}
+            </div>
+        </div>
+        <div class="user_info_row row">
+            <div class="info_label col-xs-offset-0 col-xs-6">
+                注册时间:
+            </div>
+            <div class="info_value col-xs-offest-6 col-xs-6">
+                {{ cur_user.signup_time }}
+            </div>
+        </div>
+                <div class="user_info_row row">
+            <div class="info_label col-xs-offset-0 col-xs-6">
+                上次登录时间:
+            </div>
+            <div class="info_value col-xs-offest-6 col-xs-6">
+                {{ cur_user.last_login }}
+            </div>
+        </div>
+        <div class="user_info_row row">
+            <div class="info_label col-xs-offset-0 col-xs-6">
+                登陆次数:
+            </div>
+            <div class="info_value col-xs-offest-6 col-xs-6">
+                {{ cur_user.login_num }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6">
+                <a href="/user/edit_info/" class="btn btn-block btn-lg btn-primary">编辑个人信息</a>
+            </div>
+            <div class="col-xs-6">
+                <a href="/user/edit_password/" class="btn btn-block btn-lg btn-primary">修改密码</a>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+{% endblock %}
+
+

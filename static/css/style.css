@@ -1,0 +1,19 @@
+section {
+    min-height: 480px;
+}
+
+.login_error_message {
+    border: solid 2px red;
+    background: lightpink;
+    border-radius: 4px;
+    padding: 0px 10px 0px 10px;
+    margin: 10px 0px 10px 0px;
+    color: red;
+    font-size: smaller;
+}
+
+.user_info {
+    background: #edeff1;
+    border-radius: 4px;
+    padding: 24px 23px 20px;
+}
