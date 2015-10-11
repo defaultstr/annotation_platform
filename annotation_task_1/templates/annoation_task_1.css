@@ -7,3 +7,49 @@
     border-radius: 2px;
 }
 
+.body-wrapper {
+    font: 13px Arial;
+    color: #333;
+    word-wrap: break-word;
+}
+
+.body-wrapper h3.pt {
+    font-size: 16px;
+}
+.body-wrapper a {
+    color: #00c;
+    cursor: pointer;
+}
+.results {
+    width: 550px;
+    padding-bottom: 3px;
+}
+
+.pt a em {
+    text-decoration: underline;
+}
+
+em {
+    color: #C00;
+    font-style: normal;
+}
+
+div.fb {
+    line-height: 20px;
+}
+
+cite {
+    color: #008000;
+}
+.rb {
+    padding-top: 1px;
+    margin-bottom: 13px;
+}
+
+.ft {
+    line-height: 20px;
+}
+
+.rb .pt {
+   line-height: 24px;
+}
