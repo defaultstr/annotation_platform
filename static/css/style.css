@@ -17,3 +17,18 @@ section {
     border-radius: 4px;
     padding: 24px 23px 20px;
 }
+
+.list_header {
+    background: #edeff1;
+    border-bottom: 2px solid #2f4154;
+}
+
+.list_row {
+    font-size: smaller;
+    padding: 2px;
+}
+
+.row2 {
+    background: #edeff1;
+}
+

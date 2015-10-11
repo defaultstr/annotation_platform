@@ -1,0 +1,9 @@
+<div class="row query-area">
+    当前查询:<span class="query">{{ query }}</span>
+</div>
+<div class="row">
+    {% autoescape off %}
+        {{ html }}
+    {% endautoescape %}
+</div>
+

@@ -39,6 +39,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'user_system',
+    'task_manager',
+    'annotation_task_1',
 )
 
 MIDDLEWARE_CLASSES = (

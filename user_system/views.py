@@ -31,7 +31,7 @@ def login(request):
                 user.save()
                 if error_code == 0:
                     store_in_session(request, user)
-                    return redirect_to_prev_page(request, '/home/')
+                    return redirect_to_prev_page(request, '/task/home/')
                 elif error_code == 1:
                     error_message = u'用户不存在，请检查用户名是否正确'
                 elif error_code == 2:
@@ -221,6 +221,7 @@ def reset_password(request, token_str):
             user = token.user
             user.password = form.cleaned_data['new_password']
             user.save()
+            token.delete()
             return HttpResponseRedirect('/user/login/')
         else:
             error_message = form.errors

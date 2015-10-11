@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %} base {% endblock %}</title>
+    <link rel="icon" href="/static/img/IR4.png" type="image/png"/>
     <!-- Loading Bootstrap -->
     <link href="/static/flat-ui/css/vendor/bootstrap.min.css" rel="stylesheet">
 
     <!-- Loading Flat UI -->
     <link href="/static/flat-ui/css/flat-ui.min.css" rel="stylesheet">
     <link href="/static/css/style.css" rel="stylesheet">
+    <style>
     {% block css %}
     {% endblock %}
+    </style>
 </head>
 <body>
 
@@ -59,11 +62,6 @@
     </div>
     </section>
 
-
-    <aside>
-        {% block aside %}
-        {% endblock %}
-    </aside>
 
     <footer>
         <div class="container">

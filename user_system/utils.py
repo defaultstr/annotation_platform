@@ -10,6 +10,9 @@ from django.core.mail import EmailMultiAlternatives
 import smtplib
 
 
+def get_user_from_request(req):
+    user = User.objects.get(username=req.session['username'])
+    return user
 
 def authenticate(username, password):
     '''

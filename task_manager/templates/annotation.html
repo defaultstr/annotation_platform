@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-7">
+            {% autoescape off %}
+            {{ content }}
+            {% endautoescape %}
+        </div>
+        <div id="right-side" class="col-xs-4">
+            {% autoescape off %}
+            {{ description }}
+            {% endautoescape %}
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block css %}
+    #right-side {
+        float: right;
+        background: #edeff1;
+        border-radius: 4px;
+    }
+    {% autoescape off %}
+    {{ style }}
+    {% endautoescape %}
+{% endblock %}
