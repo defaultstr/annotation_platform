@@ -6,6 +6,7 @@ from . import views
 
 urlpatterns = [
     url(r'^home/$', views.list_tasks),
+    url(r'^finished/([0-9a-z]+)/$', views.finished),
     url(r'^next_task/([0-9a-z]+)/$', views.get_next_task_unit),
     url(r'^anno/([0-9a-z]+)/([0-9a-z]+)/', views.annotate),
 ]

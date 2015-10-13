@@ -60,4 +60,25 @@ class TaskManager(object):
         """
         return '.test_style { font-size: smaller}'
 
+    def validate_annotation(self, request, task, unit_tag):
+        """
+        Validate the annotation request for given task and task unit.
+        TODO: use exception to let view know what is wrong.
+        :param request:
+        :param task:
+        :param unit_tag:
+        :return: True if the request is a valid annotation, False otherwise
+        """
+        return False
+
+    def save_annotation(self, request, task, unit_tag):
+        """
+        Save annotation in database
+        :param request:
+        :param task:
+        :param unit_tag:
+        :return: Annotation object
+        """
+
+        return None
 

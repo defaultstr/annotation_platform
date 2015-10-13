@@ -1,11 +1,25 @@
-.query-area {
+.query-div {
+    border-radius: 4px 4px 0 0;
+    background: #edeff1;
     border-bottom: 2px solid #2f4154;
 }
 
 .query {
-    background: #edeff1;
+    background: #FFF;
     border-radius: 2px;
 }
+
+.annotation-div {
+    border-top: 2px solid #2f4154;
+    background: #edeff1;
+    border-radius: 0 0 4px 4px;
+}
+
+.submit-btn {
+    margin: 10px 0 10px 0;
+}
+
+/* Belows are css for snippet */
 
 .body-wrapper {
     font: 13px Arial;

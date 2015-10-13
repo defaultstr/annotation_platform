@@ -47,8 +47,24 @@ def get_next_task_unit(user, request, task_id):
     if task_unit is not None:
         return HttpResponseRedirect('/task/anno/%s/%s/' % (task_id, task_unit.tag))
     else:
-        return HttpResponseRedirect('/task/finished/%s' % task_id)
+        return HttpResponseRedirect('/task/finished/%s/' % task_id)
 
+
+@require_login
+def finished(user, request, task_id):
+    ret = get_task_and_controller(task_id)
+    if ret is None:
+        return HttpResponseRedirect('/task/home/')
+    task, task_manager = ret
+
+    return render_to_response(
+        'finished.html',
+        {
+            'cur_user': user,
+            'task': task,
+        },
+        RequestContext(request)
+    )
 
 @require_login
 def annotate(user, request, task_id, unit_tag):
@@ -56,6 +72,11 @@ def annotate(user, request, task_id, unit_tag):
     if ret is None:
         return HttpResponseRedirect('/task/home/')
     task, task_manager = ret
+
+    if request.method == 'POST':
+        if task_manager.validate_annotation(request, task, unit_tag):
+            task_manager.save_annotation(request, task, unit_tag)
+            return HttpResponseRedirect('/task/next_task/%s/' % task_id)
 
     title = u'标注任务-%s-%s' % (task.task_name, unit_tag)
     content = task_manager.get_annotation_content(request, task, unit_tag)

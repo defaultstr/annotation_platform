@@ -3,6 +3,7 @@
 __author__ = 'defaultstr'
 
 from django.template import loader, RequestContext
+from django import forms
 from task_manager.models import *
 from task_manager.controllers import TaskManager
 from user_system.utils import *
@@ -17,6 +18,30 @@ class QueryDocumentTaskManager(TaskManager):
     """
     TaskManager for query-document pair annotation
     """
+
+    def get_next_task_unit(self, user, task):
+        """
+        The default schedule method just returns next task unit that the user has not annotated.
+        :param user: user
+        :param task: task
+        :return: next task unit, None if no new task needs annotation
+        """
+
+        task_units = TaskUnit.objects(task=task)
+        task_units = sorted(task_units, key=lambda x: json.loads(x.unit_content)['url'])
+        task_unit_tags = [t.tag for t in task_units]
+
+        annotations = Annotation.objects(task=task, user=user)
+        annotated_tags = set([a.task_unit.tag for a in annotations])
+
+        for tag in task_unit_tags:
+            if tag in annotated_tags:
+                continue
+            else:
+                return TaskUnit.objects(task=task, tag=tag)[0]
+
+        return None
+
     def get_annotation_content(self, request, task, unit_tag):
         """
         :param task: task
@@ -30,6 +55,8 @@ class QueryDocumentTaskManager(TaskManager):
             c = RequestContext(
                 request,
                 {
+                    'task_id': task.id,
+                    'unit_tag': unit_tag,
                     'query': jsonObj['query'],
                     'html': jsonObj['doc_snippet'],
                 })
@@ -69,4 +96,38 @@ class QueryDocumentTaskManager(TaskManager):
             request, {}
         )
         return t.render(c)
+
+    def validate_annotation(self, request, task, unit_tag):
+        try:
+            unit_tag = request.POST['unit_tag']
+            task_id = request.POST['task_id']
+            score = int(request.POST['score'])
+            my_task = Task.objects.get(id=task_id)
+            if task != my_task:
+                return False
+            task_unit = TaskUnit.objects.get(task=task, tag=unit_tag)
+            return True
+        except KeyError:
+            return False
+        except DoesNotExist:
+            return False
+        except ValueError:
+            return False
+
+    def save_annotation(self, request, task, unit_tag):
+        try:
+            task_unit = TaskUnit.objects.get(task=task, tag=unit_tag)
+            user = get_user_from_request(request)
+            score = int(request.POST['score'])
+            a = Annotation()
+            a.user = user
+            a.task_unit = task_unit
+            a.annotation_content = json.dumps({'score': score})
+            a.task = task
+            a.credit = task.credit_per_annotation
+            a.save()
+        except DoesNotExist:
+            return None
+        except ValueError:
+            return None
 

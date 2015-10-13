@@ -27,9 +27,9 @@ def login(request):
                 username = form.cleaned_data['username']
                 password = form.cleaned_data['password']
                 error_code, user = authenticate(username, password)
-                user.login_num += 1
-                user.save()
                 if error_code == 0:
+                    user.login_num += 1
+                    user.save()
                     store_in_session(request, user)
                     return redirect_to_prev_page(request, '/task/home/')
                 elif error_code == 1:

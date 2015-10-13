@@ -2,6 +2,10 @@ section {
     min-height: 480px;
 }
 
+.annotation-content {
+    min-width: 960px;
+}
+
 .login_error_message {
     border: solid 2px red;
     background: lightpink;
