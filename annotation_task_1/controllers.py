@@ -122,7 +122,17 @@ class QueryDocumentTaskManager(TaskManager):
             a = Annotation()
             a.user = user
             a.task_unit = task_unit
-            a.annotation_content = json.dumps({'score': score})
+            content = json.loads(task_unit.unit_content)
+
+            a.annotation_content = json.dumps(
+                {
+                    'annotator': user.username,
+                    'query': content['query'],
+                    'topic_num': content['topic_num'],
+                    'docno': content['docno'],
+                    'score': score
+                }
+            )
             a.task = task
             a.credit = task.credit_per_annotation
             a.save()
