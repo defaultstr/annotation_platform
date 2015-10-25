@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'defaultstr'
 
+import math
 from collections import defaultdict
 from .models import *
 try:
@@ -41,6 +42,12 @@ def batch_import_task_units_from_file(task, path):
             import_task_unit(task, line)
 
 
+def import_task_and_task_units(task_name, task_description, task_tag, path,
+                               annotation_per_unit=3, credit_per_annotation=1):
+    t = import_task(task_name, task_description, task_tag)
+    batch_import_task_units_from_file(t, path)
+
+
 def get_query_doc_pair(annotation):
     obj = json.loads(annotation.annotation_content)
     return obj['query'], obj['docno']
@@ -51,19 +58,38 @@ def get_query_doc_score(annotation):
     return obj['score']
 
 
+def get_two_level_doc_score(annotation):
+    obj = json.loads(annotation.annotation_content)
+    return 0 if obj['score'] <= 2 else 1
+
+
+def output_annotations(annotations, key=get_query_doc_pair, value=get_query_doc_score):
+    annotations = list(annotations)
+
+    d = defaultdict(list)
+    for a in annotations:
+        k = key(a)
+        d[k].append(value(a))
+
+    for k in d:
+        query, docno = k
+        values = sorted(d[k])
+        yield query, docno, values[len(values)/2]
+
+
 def compute_kappa(annotations, key=get_query_doc_pair, value=get_query_doc_score):
     annotations = list(annotations)
 
     value_set = set()
     for a in annotations:
-        value_set.add(get_query_doc_score(a))
+        value_set.add(value(a))
 
     value_map = {v: i for i, v in enumerate(sorted(value_set))}
 
     d = defaultdict(list)
     for a in annotations:
-        query, docno = get_query_doc_pair(a)
-        d[(query, docno)].append(get_query_doc_score(a))
+        query, docno = key(a)
+        d[(query, docno)].append(value(a))
 
     p_i = []
     n_j = [0] * len(value_map)
@@ -81,3 +107,37 @@ def compute_kappa(annotations, key=get_query_doc_pair, value=get_query_doc_score
     p_j = [1.0 * x / sum(n_j) for x in n_j]
     P_e = sum(map(lambda x: x*x, p_j))
     return (P - P_e) / (1 - P_e)
+
+
+def compute_alpha(annotations, key=get_query_doc_pair, value=get_query_doc_score):
+
+    def iter_pairs(l):
+        size = len(l)
+        if size >= 2:
+            for i in range(size-1):
+                for j in range(i+1, size):
+                    yield l[i], l[j]
+
+    def dist(x, y):
+        return (x - y) * (x - y)
+
+    annotations = list(annotations)
+
+    n = 0
+    d = defaultdict(list)
+    all_values = []
+    for a in annotations:
+        query, docno = key(a)
+        d[(query, docno)].append(value(a))
+        all_values.append(value(a))
+        n += 1
+
+    D_o = 0
+    for k in d:
+        values = d[k]
+        D_o += 1.0 / (len(values) - 1) * sum([dist(*x) for x in iter_pairs(values)])
+    D_o /= n
+
+    D_e = 1.0 / n / (n - 1) * sum([dist(*x) for x in iter_pairs(all_values)])
+
+    return 1.0 - D_o / D_e
