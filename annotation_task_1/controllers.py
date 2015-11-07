@@ -7,6 +7,7 @@ from django import forms
 from task_manager.models import *
 from task_manager.controllers import TaskManager
 from user_system.utils import *
+from .utils import *
 
 try:
     import simplejson as json
@@ -140,4 +141,17 @@ class QueryDocumentTaskManager(TaskManager):
             return None
         except ValueError:
             return None
+
+    def get_annotation_quality(self, task):
+        annotations = list(Annotation.objects(task=task))
+        ret = {}
+        if len(annotations) == 0:
+            return ret
+
+        ret['4-level kappa'] = compute_kappa(annotations)
+        ret['2-level kappa'] = compute_kappa(annotations, value=get_two_level_doc_score)
+
+        ret['Kripendorff\'s alpha'] = compute_alpha(annotations)
+
+        return ret
 

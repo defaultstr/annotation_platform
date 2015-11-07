@@ -20,6 +20,7 @@ class Task(Document):
     annotation_per_unit = IntField()      #
     credit_per_annotation = IntField()    #
     task_tag = StringField()              # task tag is used for determining corresponding TaskManager
+    display = BooleanField(default=True)
 
 
 class TaskUnit(Document):

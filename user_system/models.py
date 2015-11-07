@@ -8,6 +8,10 @@ from hashlib import sha512
 from uuid import uuid4
 import time
 
+user_group_list = (
+    ('admin', u'管理员'),
+    ('normal_user', u'普通用户'),
+)
 
 class TimestampGenerator(object):
 
@@ -34,6 +38,8 @@ class User(Document):
     email = EmailField(required=True)
     sex = StringField(choices=sex_choices)
     class_no = StringField()
+
+    user_groups = ListField(StringField(choices=user_group_list), default=['normal_user'])
 
     signup_time = DateTimeField()
     last_login = DateTimeField()

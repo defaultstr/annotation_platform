@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'defaultstr'
 
-from .models import User, ResetPasswordRequest
+from .models import User, ResetPasswordRequest, user_group_list
 from mongoengine.queryset import DoesNotExist
 from django.http import HttpResponseRedirect
 from django.http import HttpRequest
@@ -13,6 +13,7 @@ import smtplib
 def get_user_from_request(req):
     user = User.objects.get(username=req.session['username'])
     return user
+
 
 def authenticate(username, password):
     '''
@@ -55,6 +56,10 @@ def login_redirect(request, login_url='/user/login/'):
     return HttpResponseRedirect(login_url)
 
 
+def auth_failed_redirect(request, missing_group):
+    return HttpResponseRedirect('/user/auth_failed/%s/' % missing_group)
+
+
 def require_login(func):
     def ret(*args):
         req = args[0]
@@ -68,6 +73,38 @@ def require_login(func):
         except DoesNotExist as e:
             return login_redirect(req)
     return ret
+
+
+def require_auth(user_groups):
+
+    def require_login_with_auth(func):
+
+        def ret(*args):
+            req = args[0]
+            assert isinstance(req, HttpRequest)
+            if 'username' not in req.session:
+                return login_redirect(req)
+            try:
+                user = User.objects.get(username=req.session['username'])
+                # check if all the user group requirements are satisfied
+                # if no, show auth failed page
+                for g in user_groups:
+                    if g not in list(user.user_groups):
+                        return auth_failed_redirect(req, g)
+
+                # if yes, pass the user as first parm
+                args = [user] + list(args)
+                return func(*args)
+            except DoesNotExist as e:
+                return login_redirect(req)
+
+        return ret
+
+    return require_login_with_auth
+
+
+def get_user_groups_string(user_groups):
+    return u' | '.join([val for key, val in user_group_list if key in user_groups])
 
 
 def send_reset_password_email(request, reset_req):

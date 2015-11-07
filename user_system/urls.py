@@ -15,5 +15,6 @@ urlpatterns = [
     url(r'^edit_password/$', views.edit_password),
     url(r'^reset_password/([a-zA-Z0-9]{12})/$', views.reset_password),
     url(r'^forget_password/$', views.forget_password),
+    url(r'^auth_failed/(\w+)/$', views.auth_failed),
 ]
 

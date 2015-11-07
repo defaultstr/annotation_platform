@@ -91,10 +91,12 @@ def logout(request):
 
 @require_login
 def info(user, request):
+    user_group_string = get_user_groups_string(user.user_groups)
     return render_to_response(
         'info.html',
         {
-            'cur_user': user
+            'cur_user': user,
+            'user_group_string': user_group_string
         },
         RequestContext(request),
     )
@@ -234,4 +236,20 @@ def reset_password(request, token_str):
         },
         RequestContext(request),
     )
+
+
+@require_login
+def auth_failed(user, request, missing_group):
+    user_group_string = get_user_groups_string(user.user_groups)
+    missing_group_string = get_user_groups_string([missing_group])
+    return render_to_response(
+        'auth_failed.html',
+        {
+            'cur_user': user,
+            'user_group_string': user_group_string,
+            'missing_group_string': missing_group_string,
+        },
+        RequestContext(request),
+    )
+
 

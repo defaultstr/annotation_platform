@@ -82,3 +82,28 @@ class TaskManager(object):
 
         return None
 
+    def get_task_unit_num(self, task):
+        """
+        Return the number of task units of given task
+        :param task:
+        :return: number of task units
+        """
+        return len(TaskUnit.objects(task=task))
+
+    def get_annotation_num(self, task):
+        """
+        Return the number of annotations corresponding to given task
+        :param task:
+        :return: number of annotations
+        """
+        return len(Annotation.objects(task=task))
+
+    def get_annotation_quality(self, task):
+        """
+        Return a dict of quality metrics
+        :param task:
+        :return: a dict of implemented quality metrics like kappa or alpha
+        """
+        return None
+
+
