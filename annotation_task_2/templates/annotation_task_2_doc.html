@@ -1,0 +1,33 @@
+
+<div class="row">
+    <div class="col-xs-10">
+        <div class="results">
+        {% autoescape off %}
+            {{ html }}
+        {% endautoescape %}
+        </div>
+    </div>
+
+    <div class="col-xs-2 doc-annotation-div">
+        <form class="doc_form" id="{{ doc_id }}" action="" method="post">
+            rank：{{ rank }}</br>
+            浏览用时：</br>
+            {{ dwell_time }}</br>
+            <span class="doc_raty" id="doc_raty_{{ doc_id }}"></span>
+            </br>
+            <input type="checkbox" value="{{ doc_id }}" name="not_available">
+            结果失效
+        </form>
+    </div>
+
+    <script>
+        $('#doc_raty_{{ doc_id }}').raty('set', {
+            number: 4,
+            starOn: '/static/raty/img/star-on.png',
+            starOff: '/static/raty/img/star-off.png'
+        });
+    </script>
+</div>
+
+
+

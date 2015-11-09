@@ -11,6 +11,47 @@ except ImportError:
     import json
 
 
+def _compute_kappa(d, value_map):
+    p_i = []
+    n_j = [0] * len(value_map)
+
+    for k in d:
+        values = map(value_map.get, d[k])
+        n_i = len(values)
+        n_ij = [0] * len(value_map)
+        for v in values:
+            n_ij[v] += 1
+            n_j[v] += 1
+        p_i.append(1.0 * (sum(map(lambda x: x*x, n_ij)) - n_i) / n_i / (n_i-1))
+
+    P = sum(p_i) / len(p_i)
+    p_j = [1.0 * x / sum(n_j) for x in n_j]
+    P_e = sum(map(lambda x: x*x, p_j))
+    return (P - P_e) / (1 - P_e)
+
+
+def _compute_alpha(n, d, all_values):
+    def iter_pairs(l):
+        size = len(l)
+        if size >= 2:
+            for i in range(size-1):
+                for j in range(i+1, size):
+                    yield l[i], l[j]
+
+    def dist(x, y):
+        return (x - y) * (x - y)
+
+    D_o = 0
+    for k in d:
+        values = d[k]
+        D_o += 1.0 / (len(values) - 1) * sum([dist(*x) for x in iter_pairs(values)])
+    D_o /= n
+
+    D_e = 1.0 / n / (n - 1) * sum([dist(*x) for x in iter_pairs(all_values)])
+
+    return 1.0 - D_o / D_e
+
+
 def import_task(task_name,
                 task_description,
                 task_tag,

@@ -1,0 +1,115 @@
+<div class="row queries">
+    <script src="/static/raty/jquery.raty.js"></script>
+    {% autoescape off %}
+    {% for q in queries %}
+        <div class="query">
+            {{ q }}
+        </div>
+    {% endfor %}
+    {% endautoescape %}
+</div>
+
+<div class="row session-annotation-div">
+    <div class="col-xs-6">
+        <form class="session_form" id="submit-form" action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="task_id" value="{{ task_id }}">
+            <input type="hidden" name="session_id" value="{{ session_id }}">
+        任务满意度：<span id="session_raty_{{ session_id }}"></span>
+        </form>
+    </div>
+    <div class="col-xs-offset-2 col-xs-4">
+        <div id="submit-btn" class="submit-btn btn btn-block btn-lg btn-primary">
+            提交
+        </div>
+    </div>
+    <script>
+        $('#session_raty_{{ session_id }}').raty('set', {
+            number: 5,
+            starOn: '/static/raty/img/star-on.png',
+            starOff: '/static/raty/img/star-off.png'
+        });
+        $(function() {
+            $('#submit-btn').click(
+                    function() {
+                        $("#submit-btn").attr('disabled', "true");
+
+                        var retObj = {};
+
+                        // session level annotation
+                        retObj["task_id"] = $('#submit-form').find("[name='task_id']").val();
+                        retObj["session_id"] = $("#submit-form").find("[name='session_id']").val();
+                        retObj["session_score"] = $("#submit-form").find("[name='score']").val();
+
+                        // query level annotations
+                        retObj["query_annotations"] = [];
+                        var all_query_annotated = true;
+                        $(".query_form").each(function()
+                                {
+
+                                    if ($(this).find("[name='score']").val() == '') {
+                                        all_query_annotated = false;
+                                    }
+
+                                    var query_annotation = {};
+                                    query_annotation['query_id'] = $(this).attr('id');
+                                    query_annotation['query_score'] = $(this).find("[name='score']").val();
+                                    retObj["query_annotations"].push(query_annotation);
+                                }
+                        );
+
+                        // doc annotations
+                        retObj["doc_annotations"] = [];
+                        var all_doc_annotated = true;
+                        $(".doc_form").each(function()
+                                {
+                                    if ($(this).find("[name='score']").val() == '') {
+                                       all_doc_annotated = false;
+                                    }
+
+                                    var doc_annotation = {};
+                                    doc_annotation['doc_id'] = $(this).attr('id');
+                                    doc_annotation['doc_score'] = $(this).find("[name='score']").val();
+                                    doc_annotation['not_available'] = $(this).find("[name='not_available']").is(':checked');
+                                    retObj["doc_annotations"].push(doc_annotation);
+                                }
+                        );
+
+                        // handle errors
+                        if (!all_doc_annotated) {
+                            alert('请标注所有文档的有帮助程度！');
+                            $("#submit-btn").removeAttr("disabled");
+                            return;
+                        }
+                        if (!all_query_annotated) {
+                            alert('请标注所有查询的满意度！');
+                            $("#submit-btn").removeAttr("disabled");
+                            return;
+                        }
+                        if (retObj["session_score"] == '') {
+                            alert('请标注搜索任务满意度！');
+                            $("#submit-btn").removeAttr("disabled");
+                            return;
+                        }
+
+                        var csrf = $("#submit-form").children("[name='csrfmiddlewaretoken']").val();
+                        $.ajax({
+                            type: 'POST',
+                            url: window.location.href,
+                            data: {
+                                csrfmiddlewaretoken: csrf,
+                                message: JSON.stringify(retObj)
+                            },
+                            async: false,
+                            success: function(data) {
+                                window.location = data.url;
+                            }
+                        });
+                    }
+            );
+        });
+    </script>
+</div>
+
+
+

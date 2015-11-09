@@ -75,6 +75,10 @@ def annotate(user, request, task_id, unit_tag):
     if request.method == 'POST':
         if task_manager.validate_annotation(request, task, unit_tag):
             task_manager.save_annotation(request, task, unit_tag)
+            if "message" in request.POST:
+                return HttpResponse(
+                    json.dumps({'url': '/task/next_task/%s/' % task_id}),
+                    content_type='application/json')
             return HttpResponseRedirect('/task/next_task/%s/' % task_id)
 
     title = u'标注任务-%s-%s' % (task.task_name, unit_tag)
@@ -170,8 +174,10 @@ def task_info(user, request, task_id):
     task, task_manager = ret
 
     quality_html = '\n'.join(
-        ['<p>%s: %f</p>' % (k, v)
-            for k, v in task_manager.get_annotation_quality(task).items()]
+        ['%s: %f</br>' % (k, v)
+            for k, v in sorted(
+            task_manager.get_annotation_quality(task).items(), key=lambda x: x[0])
+        ]
     )
 
     return render_to_response(

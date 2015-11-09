@@ -1,0 +1,85 @@
+.query-div {
+    border-radius: 4px 4px 0 0;
+    background: #edeff1;
+    border-bottom: 2px solid #2f4154;
+}
+
+.query {
+    background: #FFF;
+    border-radius: 2px;
+    margin-top: 1px;
+    margin-bottom: 10px;
+}
+
+.session-annotation-div {
+    margin-top: 10px;
+    border-radius: 4px;
+    background: #34495e;
+    color: #fff;
+    width: 100%;
+}
+
+.query-annotation-div {
+    border-top: 2px solid #2f4154;
+    background: #edeff1;
+    border-radius: 0 0 4px 4px;
+}
+
+.doc-annotation-div {
+    font-size: 14px;
+    padding-top: 10px;
+}
+
+.submit-btn {
+    margin: 10px 0 10px 0;
+}
+
+/* Belows are css for snippet */
+
+.body-wrapper {
+    background: #fdfff1;
+    color: #333;
+    word-wrap: break-word;
+}
+
+.body-wrapper h3.pt {
+    font-size: 16px;
+}
+.body-wrapper a {
+    color: #00c;
+    cursor: pointer;
+}
+.results {
+    font: 13px Arial;
+    width: 550px;
+    padding-bottom: 3px;
+}
+
+.pt a em {
+    text-decoration: underline;
+}
+
+em {
+    color: #C00;
+    font-style: normal;
+}
+
+div.fb {
+    line-height: 20px;
+}
+
+cite {
+    color: #008000;
+}
+.rb {
+    padding-top: 1px;
+    margin-bottom: 13px;
+}
+
+.ft {
+    line-height: 20px;
+}
+
+.rb .pt {
+   line-height: 24px;
+}

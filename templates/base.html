@@ -33,14 +33,22 @@
             <div class="collapse navbar-collapse" id="navbar-collapse-01">
               <ul class="nav navbar-nav navbar-right">
                   {% if cur_user %}
+                      {% if 'admin' in cur_user.user_groups %}
+                          <li><a href="/task/manage/">
+                              <span class="fui-gear"></span>
+                              管理任务
+                          </a></li>
+                      {% endif %}
+                      <li><a href="/task/home/">
+                          <span class="fui-home"></span>
+                          任务列表
+                      </a></li>
                       <li><a href="/user/info/">
-                          <span class="fui-info-circle">
-                          </span>
+                          <span class="fui-info-circle"></span>
                           个人信息
                       </a></li>
                       <li><a href="/user/logout/">
-                          <span class="fui-cross-circle">
-                          </span>
+                          <span class="fui-cross-circle"></span>
                           登出
                       </a></li>
                   {% else %}

@@ -1,0 +1,41 @@
+<div class="row query-div">
+    <div class="col-xs-2 text-right">
+        查询{{ query_index }}:
+    </div>
+    <div class="col-xs-6 query">
+        {{ query }}
+    </div>
+    <div class="col-xs-4">
+       查询用时: {{ query_time }}
+    </div>
+</div>
+
+<div class="row body-wrapper">
+    {% autoescape off %}
+        {% for d in clicked_docs %}
+            {{ d }}
+        {% empty %}
+            <div class="text-center">
+                该查询没有点击结果。
+            </div>
+        {% endfor %}
+    {% endautoescape %}
+</div>
+
+<div class="row query-annotation-div">
+    <div class="col-xs-6">
+        <form class="query_form" id="{{ query_id }}" action="" method="post">
+        查询满意度：<span id="query_raty_{{ query_id }}"></span>
+        </form>
+    </div>
+    <script>
+        $('#query_raty_{{ query_id }}').raty('set', {
+            number: 5,
+            starOn: '/static/raty/img/star-on.png',
+            starOff: '/static/raty/img/star-off.png'
+        });
+    </script>
+</div>
+
+
+

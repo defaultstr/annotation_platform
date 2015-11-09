@@ -92,7 +92,7 @@ class QueryDocumentTaskManager(TaskManager):
         :param unit_tag:
         :return: CSS fragment that will be inserted to the css block
         """
-        t = loader.get_template('annoation_task_1.css')
+        t = loader.get_template('annotation_task_1.css')
         c = RequestContext(
             request, {}
         )

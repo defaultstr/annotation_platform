@@ -104,6 +104,6 @@ class TaskManager(object):
         :param task:
         :return: a dict of implemented quality metrics like kappa or alpha
         """
-        return None
+        return {}
 
 

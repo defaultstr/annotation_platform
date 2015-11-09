@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^user/', include('user_system.urls')),
     url(r'^task/', include('task_manager.urls')),
+    url(r'^$', views.index),
 ]
