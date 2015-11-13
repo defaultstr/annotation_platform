@@ -8,10 +8,22 @@ except ImportError:
     import json
 from collections import defaultdict
 from task_manager.utils import _compute_kappa, _compute_alpha
+from task_manager.models import Annotation, Task, TaskUnit 
+from sys import stdout
+
+
+def import_task(topic_num):
+    task = Task()
+    task.task_name = 'task_2_%s' % topic_num
+    task.task_description = '搜索上下文标注-任务:%s' % topic_num
+    task.annotation_per_unit = 3
+    task.credit_per_annotation = 1
+    task.task_tag = 'task_2'
+    task.display = True
+    return task.save()
 
 
 def import_task_unit(task, json_str):
-    from task_manager.models import *
     obj = json.loads(json_str)
     u = TaskUnit()
     u.task = task
@@ -53,6 +65,10 @@ def get_query(annotation, value):
     for query in jsonObj['query_annotations']:
         yield query['query_id'], value(query['query_score'])
 
+def get_session(annotation, value):
+    jsonObj = json.loads(annotation.annotation_content)
+    yield jsonObj['session_id'], value(jsonObj['session_score']) 
+
 
 def compute_kappa(annotations, extract=get_doc, value=lambda x:int(x)):
     value_set = set()
@@ -81,6 +97,23 @@ def compute_alpha(annotations, extract=get_doc, value=lambda x:int(x)):
             all_values.append(v)
             n += 1
     return _compute_alpha(n, d, all_values)
+
+
+def output_annotations(annotations, fout=stdout):
+    for annotation in annotations:
+        # retrive unit obj
+        unit = annotation.task_unit
+        unitObj = json.loads(unit.unit_content)
+        # delete snippets
+        for query in unitObj['queries']:
+            for click in query['clicked_docs']:
+                del click['snippet']
+
+        annoObj = json.loads(annotation.annotation_content)
+        annoObj['task_unit'] = unitObj
+        
+        print >>fout, json.dumps(annoObj, ensure_ascii=False).encode('utf8')        
+        
 
 
 

@@ -16,6 +16,8 @@ def _compute_kappa(d, value_map):
     n_j = [0] * len(value_map)
 
     for k in d:
+        if len(d[k]) < 2:
+            continue
         values = map(value_map.get, d[k])
         n_i = len(values)
         n_ij = [0] * len(value_map)
