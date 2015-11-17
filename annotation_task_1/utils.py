@@ -7,7 +7,7 @@ try:
 except ImportError:
     import json
 from collections import defaultdict
-from task_manager.utils import _compute_kappa, _compute_alpha
+from task_manager.utils import _compute_kappa, _compute_alpha, _compute_weighted_kappa
 
 
 def import_task_unit(task, json_str):
@@ -70,6 +70,12 @@ def compute_kappa(annotations, key=get_query_doc_pair, value=get_query_doc_score
         d[(query, docno)].append(value(a))
 
     return _compute_kappa(d, value_map)
+
+
+def compute_weighted_kappa(annotations, key=get_query_doc_pair, value=get_query_doc_score):
+    annotations = list(annotations)
+    l = [(key(a), a.user.username, value(a)) for a in annotations]
+    return _compute_weighted_kappa(l)
 
 
 def compute_alpha(annotations, key=get_query_doc_pair, value=get_query_doc_score):

@@ -7,7 +7,7 @@ try:
 except ImportError:
     import json
 from collections import defaultdict
-from task_manager.utils import _compute_kappa, _compute_alpha
+from task_manager.utils import _compute_kappa, _compute_alpha, _compute_weighted_kappa
 from task_manager.models import Annotation, Task, TaskUnit 
 from sys import stdout
 
@@ -83,6 +83,15 @@ def compute_kappa(annotations, extract=get_doc, value=lambda x:int(x)):
             d[k].append(v)
 
     return _compute_kappa(d, value_map)
+
+
+def compute_weighted_kappa(annotations, extract=get_doc, value=lambda x: int(x)):
+    l = []
+    for annotation in annotations:
+        for k, v in extract(annotation, value):
+            l.append((k, annotation.user.username, v))
+    return _compute_weighted_kappa(l)
+
 
 
 def compute_alpha(annotations, extract=get_doc, value=lambda x:int(x)):

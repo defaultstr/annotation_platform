@@ -11,6 +11,58 @@ except ImportError:
     import json
 
 
+def _compute_weighted_kappa(l):
+    """
+    :param l:  an (item, annotator, label)-triplet list, labels must be ordinal
+    :return: weighted kappa
+    """
+    # get value map
+    value_list = [int(x[2]) for x in l]
+    max_label = max(value_list)
+    min_label = min(value_list)
+    value_map = {x: i for i, x in enumerate(range(min_label, max_label+1))}
+
+    # weighted function
+    def weight(x, y):
+        return 1.0 - 1.0 * abs(x - y) / (max_label - min_label)
+
+    # compute marginal prob. of each annotator
+    n_j = defaultdict(lambda: [0] * len(value_map))
+    for _, annotator, label in l:
+        x = value_map[label]
+        n_j[annotator][x] += 1
+
+    for annotator in n_j:
+        normalizer = 1.0 * sum(n_j[annotator])
+        for x in range(len(value_map)):
+            n_j[annotator][x] /= normalizer
+
+    # group triplets by item
+    d = defaultdict(list)
+    for item, annotator, label in l:
+        d[item].append((annotator, label))
+
+    # compute kappa
+    kappas = []
+    for item in d:
+        for i in range(len(d[item])):
+            for j in range(i+1, len(d[item])):
+                x = value_map[d[item][i][1]]
+                anno_x = d[item][i][0]
+                y = value_map[d[item][j][1]]
+                anno_y = d[item][j][0]
+                p_o = weight(x, y)
+
+                p_e = 0.0
+                for x in range(len(value_map)):
+                    for y in range(len(value_map)):
+                        p_e += weight(x, y) * n_j[anno_x][x] * n_j[anno_y][y]
+
+                kappas.append((p_o - p_e) / (1.0 - p_e))
+
+    return sum(kappas) / len(kappas)
+
+
 def _compute_kappa(d, value_map):
     p_i = []
     n_j = [0] * len(value_map)
@@ -46,6 +98,8 @@ def _compute_alpha(n, d, all_values):
     D_o = 0
     for k in d:
         values = d[k]
+        if len(values) < 2:
+            continue
         D_o += 1.0 / (len(values) - 1) * sum([dist(*x) for x in iter_pairs(values)])
     D_o /= n
 

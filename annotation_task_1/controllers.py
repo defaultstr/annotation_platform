@@ -148,9 +148,8 @@ class QueryDocumentTaskManager(TaskManager):
         if len(annotations) == 0:
             return ret
 
+        ret['weighted kappa'] = compute_weighted_kappa(annotations)
         ret['4-level kappa'] = compute_kappa(annotations)
-        ret['2-level kappa'] = compute_kappa(annotations, value=get_two_level_doc_score)
-
         ret['Kripendorff\'s alpha'] = compute_alpha(annotations)
 
         return ret

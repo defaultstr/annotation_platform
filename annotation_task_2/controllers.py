@@ -183,11 +183,11 @@ class SessionTaskManager(TaskManager):
             return ret
 
         ret['doc 4-level kappa'] = compute_kappa(annotations)
-        ret['doc 2-level kappa'] = compute_kappa(annotations, value=get_two_level)
+        ret['doc weighted kappa'] = compute_weighted_kappa(annotations)
         ret['doc alpha'] = compute_alpha(annotations)
 
         ret['query 4-level kappa'] = compute_kappa(annotations, extract=get_query)
-        ret['query 2-level kappa'] = compute_kappa(annotations, extract=get_query, value=get_two_level)
+        ret['query weighte kappa'] = compute_weighted_kappa(annotations, extract=get_query)
         ret['query alpha'] = compute_alpha(annotations, extract=get_query)
 
         return ret
