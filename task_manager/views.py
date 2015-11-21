@@ -41,7 +41,7 @@ def get_next_task_unit(user, request, task_id):
         return HttpResponseRedirect('/task/home/')
     task, task_manager = ret
 
-    task_unit = task_manager.get_next_task_unit(user, task)
+    task_unit = task_manager.get_next_task_unit(request, user, task)
     if task_unit is not None:
         return HttpResponseRedirect('/task/anno/%s/%s/' % (task_id, task_unit.tag))
     else:

@@ -14,7 +14,7 @@ except ImportError:
 
 
 class SessionTaskManager(TaskManager):
-    def get_next_task_unit(self, user, task):
+    def get_next_task_unit(self, request, user, task):
         """
         The default schedule method just returns next task unit that the user has not annotated.
         :param user: user
@@ -33,13 +33,10 @@ class SessionTaskManager(TaskManager):
                 continue
             else:
                 return TaskUnit.objects(task=task, tag=tag)[0]
-
+        if len(task_units) > 0:
+            self.send_task_finished_emails(request, task, user, admin_emails=['maojiaxin@gmail.com', 'songjingtao1994@sina.com'])
         return None
 
-        '''
-        import random
-        return TaskUnit.objects(task=task, tag=random.choice(task_unit_tags))[0]
-        '''
 
     def get_annotation_content(self, request, task, unit_tag):
         """

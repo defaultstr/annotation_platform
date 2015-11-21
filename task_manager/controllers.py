@@ -4,6 +4,7 @@ __author__ = 'defaultstr'
 
 from user_system.models import *
 from .models import *
+from .utils import send_task_finished_email
 
 
 class TaskManager(object):
@@ -14,7 +15,7 @@ class TaskManager(object):
     by subclassing TaskManager class, and put right content in TaskUnit document
     """
 
-    def get_next_task_unit(self, user, task):
+    def get_next_task_unit(self, request, user, task):
         """
         The default schedule method just returns next task unit that the user has not annotated.
         :param user: user
@@ -106,4 +107,12 @@ class TaskManager(object):
         """
         return {}
 
+    def send_task_finished_emails(self, request, task, user, admin_emails=[]):
+        """
+        send emails to admins, when an annotator finishs all the task unit in a task.
+        :param user:
+        :param task:
+        :return:
+        """
+        send_task_finished_email(request, task, user, admin_emails=admin_emails)
 

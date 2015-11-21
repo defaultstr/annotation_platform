@@ -122,7 +122,8 @@ def output_annotations(annotations, fout=stdout):
         annoObj['task_unit'] = unitObj
         
         print >>fout, json.dumps(annoObj, ensure_ascii=False).encode('utf8')        
-        
+
+
 
 
 

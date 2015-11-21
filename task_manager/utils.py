@@ -9,6 +9,9 @@ try:
     import simplejson as json
 except ImportError:
     import json
+from django.core.mail import EmailMultiAlternatives
+import smtplib
+
 
 
 def _compute_weighted_kappa(l):
@@ -238,3 +241,27 @@ def compute_alpha(annotations, key=get_query_doc_pair, value=get_query_doc_score
     D_e = 1.0 / n / (n - 1) * sum([dist(*x) for x in iter_pairs(all_values)])
 
     return 1.0 - D_o / D_e
+
+
+def send_task_finished_email(request, task, user, admin_emails=[]):
+    subject = u'THUIR标注平台任务完成'
+
+    message = u'用户%s ' % user.username
+
+    message += u'已完成任务%s: %s的标注.' % (task.task_name, task.task_description)
+    message += u'任务详情,请点击：'
+    host = u'http://' + request.get_host()
+    url = unicode(host + '/task/info/%s/' % task.id)
+    html_content = message + u'<a href="%s">%s</a>.' % (url, url)
+    message += url
+
+    source = 'thuir_annotation@163.com'
+    for target in admin_emails:
+        msg = EmailMultiAlternatives(subject, message, source, [target])
+        msg.attach_alternative(html_content, 'text/html')
+        try:
+            msg.send()
+        except smtplib.SMTPException as e:
+            print type(e)
+            print e
+
