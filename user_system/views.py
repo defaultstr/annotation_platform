@@ -29,6 +29,7 @@ def login(request):
                 error_code, user = authenticate(username, password)
                 if error_code == 0:
                     user.login_num += 1
+                    user.last_login = datetime.datetime.now()
                     user.save()
                     store_in_session(request, user)
                     return redirect_to_prev_page(request, '/task/home/')
