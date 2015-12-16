@@ -17,7 +17,9 @@
             {% csrf_token %}
             <input type="hidden" name="task_id" value="{{ task_id }}">
             <input type="hidden" name="unit_tag" value="{{ unit_tag }}">
-        相关性标注：<span id="annotation_raty"></span>
+            相关性标注：<span id="annotation_raty"></span></br>
+            结果失效？：
+            <input type="checkbox" name="not_available">
         </form>
     </div>
     <div class="col-xs-offset-8">

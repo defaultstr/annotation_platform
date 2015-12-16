@@ -122,6 +122,7 @@ class QueryDocumentTaskManager(TaskManager):
             task_unit = TaskUnit.objects.get(task=task, tag=unit_tag)
             user = get_user_from_request(request)
             score = int(request.POST['score'])
+            not_available = 'not_available' in request.POST
             a = Annotation()
             a.user = user
             a.task_unit = task_unit
@@ -133,7 +134,8 @@ class QueryDocumentTaskManager(TaskManager):
                     'query': content['query'],
                     'topic_num': content['topic_num'],
                     'docno': content['docno'],
-                    'score': score
+                    'score': score,
+                    'not_available': not_available,
                 }
             )
             a.task = task

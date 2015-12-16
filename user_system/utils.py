@@ -3,6 +3,7 @@
 __author__ = 'defaultstr'
 
 from .models import User, ResetPasswordRequest, user_group_list
+from task_manager.models import Annotation
 from mongoengine.queryset import DoesNotExist
 from django.http import HttpResponseRedirect
 from django.http import HttpRequest
@@ -129,6 +130,13 @@ def send_reset_password_email(request, reset_req):
     except smtplib.SMTPException as e:
         print type(e)
         print e
+
+
+def get_credit(user):
+    credit = 0
+    for a in Annotation.objects(user=user):
+        credit += a.credit
+    return credit
 
 
 

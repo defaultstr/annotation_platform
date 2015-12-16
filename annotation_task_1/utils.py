@@ -26,6 +26,7 @@ def batch_import_task_units_from_file(task, path):
         for line in fin:
             import_task_unit(task, line)
 
+
 def get_query_doc_pair(annotation):
     obj = json.loads(annotation.annotation_content)
     return obj['query'], obj['docno']

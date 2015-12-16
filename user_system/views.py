@@ -97,6 +97,7 @@ def info(user, request):
         'info.html',
         {
             'cur_user': user,
+            'credits': get_credit(user),
             'user_group_string': user_group_string
         },
         RequestContext(request),
