@@ -44,6 +44,7 @@ class User(Document):
     signup_time = DateTimeField()
     last_login = DateTimeField()
     login_num = IntField()
+    credit = IntField()
 
 
 class ResetPasswordRequest(Document):

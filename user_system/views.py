@@ -68,6 +68,7 @@ def signup(request):
             user.signup_time = datetime.datetime.now()
             user.last_login = datetime.datetime.now()
             user.login_num = 0
+            user.credit = 0
             user.save()
             return HttpResponseRedirect('/user/login/')
         else:
@@ -97,7 +98,6 @@ def info(user, request):
         'info.html',
         {
             'cur_user': user,
-            'credits': get_credit(user),
             'user_group_string': user_group_string
         },
         RequestContext(request),

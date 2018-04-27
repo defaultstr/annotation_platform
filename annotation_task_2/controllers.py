@@ -167,6 +167,10 @@ class SessionTaskManager(TaskManager):
             a.task = task
             a.credit = task.credit_per_annotation
             a.save()
+
+            # add credit to user
+            user.credit += task.credit_per_annotation
+            user.save()
         except DoesNotExist:
             return None
         except ValueError:

@@ -114,5 +114,18 @@ class TaskManager(object):
         :param task:
         :return:
         """
-        send_task_finished_email(request, task, user, admin_emails=admin_emails)
+        send_task_finished_email(request,
+                                 task,
+                                 user,
+                                 self.get_task_info_html(task),
+                                 admin_emails=admin_emails)
+
+
+    def get_task_info_html(self, task):
+        """
+        return brief information about current task
+        :param task:
+        :return: info string
+        """
+        return ''
 

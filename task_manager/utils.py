@@ -11,7 +11,7 @@ except ImportError:
     import json
 from django.core.mail import EmailMultiAlternatives
 import smtplib
-
+import numpy as np
 
 
 def _compute_weighted_kappa(l):
@@ -63,7 +63,7 @@ def _compute_weighted_kappa(l):
 
                 kappas.append((p_o - p_e) / (1.0 - p_e))
 
-    return sum(kappas) / len(kappas)
+    return sum(kappas) / len(kappas), np.std(kappas) / np.sqrt(len(kappas))
 
 
 def _compute_kappa(d, value_map):
@@ -84,7 +84,10 @@ def _compute_kappa(d, value_map):
     P = sum(p_i) / len(p_i)
     p_j = [1.0 * x / sum(n_j) for x in n_j]
     P_e = sum(map(lambda x: x*x, p_j))
-    return (P - P_e) / (1 - P_e)
+    if P_e == 1.0:
+        return 1.0
+    else:
+        return (P - P_e) / (1 - P_e)
 
 
 def _compute_alpha(n, d, all_values):
@@ -243,12 +246,13 @@ def compute_alpha(annotations, key=get_query_doc_pair, value=get_query_doc_score
     return 1.0 - D_o / D_e
 
 
-def send_task_finished_email(request, task, user, admin_emails=[]):
+def send_task_finished_email(request, task, user, task_info, admin_emails=[]):
     subject = u'THUIR标注平台任务完成'
 
     message = u'用户%s ' % user.username
 
-    message += u'已完成任务%s: %s的标注.' % (task.task_name, task.task_description)
+    message += u'已完成任务%s: %s的标注.</br>' % (task.task_name, task.task_description)
+    message += task_info + '</br>'
     message += u'任务详情,请点击：'
     host = u'http://' + request.get_host()
     url = unicode(host + '/task/info/%s/' % task.id)

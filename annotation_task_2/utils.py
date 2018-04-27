@@ -85,12 +85,15 @@ def compute_kappa(annotations, extract=get_doc, value=lambda x:int(x)):
     return _compute_kappa(d, value_map)
 
 
-def compute_weighted_kappa(annotations, extract=get_doc, value=lambda x: int(x)):
+def compute_weighted_kappa(annotations, extract=get_doc, value=lambda x: int(x), show_std=False):
     l = []
     for annotation in annotations:
         for k, v in extract(annotation, value):
             l.append((k, annotation.user.username, v))
-    return _compute_weighted_kappa(l)
+    if show_std:
+        return _compute_weighted_kappa(l)
+    else:
+        return _compute_weighted_kappa(l)[0]
 
 
 

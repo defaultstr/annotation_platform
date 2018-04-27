@@ -141,6 +141,10 @@ class QueryDocumentTaskManager(TaskManager):
             a.task = task
             a.credit = task.credit_per_annotation
             a.save()
+
+            # add credit to user
+            user.credit += task.credit_per_annotation
+            user.save()
         except DoesNotExist:
             return None
         except ValueError:
@@ -157,4 +161,17 @@ class QueryDocumentTaskManager(TaskManager):
         ret['Kripendorff\'s alpha'] = compute_alpha(annotations)
 
         return ret
+
+    def get_task_info_html(self, task):
+        task_info = ' #task unit: %d </br>' % len(TaskUnit.objects(task=task))
+        task_info += ' #annotation: %d </br>' % len(Annotation.objects(task=task))
+        task_info += '</br>'.join(
+            [' %s: %f ' % (k, v)
+                for k, v in sorted(
+                    self.get_annotation_quality(task).items(), key=lambda x: x[0]
+                )
+            ]
+        )
+        return task_info
+
 

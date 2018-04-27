@@ -73,10 +73,13 @@ def compute_kappa(annotations, key=get_query_doc_pair, value=get_query_doc_score
     return _compute_kappa(d, value_map)
 
 
-def compute_weighted_kappa(annotations, key=get_query_doc_pair, value=get_query_doc_score):
+def compute_weighted_kappa(annotations, key=get_query_doc_pair, value=get_query_doc_score, show_std=False):
     annotations = list(annotations)
     l = [(key(a), a.user.username, value(a)) for a in annotations]
-    return _compute_weighted_kappa(l)
+    if show_std:
+        return _compute_weighted_kappa(l)
+    else:
+        return _compute_weighted_kappa(l)[0]
 
 
 def compute_alpha(annotations, key=get_query_doc_pair, value=get_query_doc_score):
